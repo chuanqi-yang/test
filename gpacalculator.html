@@ -6,6 +6,7 @@
     <meta name="description" content="GPA Calculator">
     <title>Great Oak Foundation - GPA Calculator</title>
     <style>
+        /* ... Previous styles remain the same ... */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
             margin: 0;
@@ -45,7 +46,7 @@
             margin: 2rem auto;
             padding: 0 1rem;
             flex: 1;
-            margin-bottom: 4rem; /* Add space for footer */
+            margin-bottom: 4rem;
         }
 
         #gpa-calculator {
@@ -192,15 +193,24 @@
         document.getElementById('calculate-gpa').addEventListener('click', function() {
             const grades = Array.from(document.getElementsByClassName('percentage'))
                 .map(input => parseFloat(input.value))
-                .filter(grade => !isNaN(grade));
+                .filter(grade => !isNaN(grade) && grade !== '');
 
             if (grades.length === 0) {
                 document.getElementById('result').textContent = 'Please enter at least one grade';
                 return;
             }
 
-            const average = grades.reduce((sum, grade) => sum + grade, 0) / grades.length;
+            // Calculate the sum and divide by the number of grades
+            const sum = grades.reduce((acc, grade) => acc + grade, 0);
+            const average = sum / grades.length;
+            
+            // Display the result with 2 decimal places
             document.getElementById('result').textContent = `Your GPA: ${average.toFixed(2)}%`;
+            
+            // Log for debugging
+            console.log('Grades:', grades);
+            console.log('Sum:', sum);
+            console.log('Average:', average);
         });
 
         // Add initial row
