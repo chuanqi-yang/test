@@ -1,1 +1,596 @@
-aaa
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="OUAC Grade Converter for Medical School Applications">
+    <title>Great Oak Foundation - OUAC Grade Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 0;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav ul li {
+            margin: 0 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #3498db;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        #gpa-converter {
+            text-align: center;
+        }
+
+        #gpa-converter h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+
+        #gpa-converter p {
+            margin-bottom: 30px;
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        .university-selection {
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .university-selection h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+            text-align: center;
+        }
+
+        .university-dropdown {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            display: block;
+            padding: 12px;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: white;
+        }
+
+        .university-dropdown:focus {
+            outline: none;
+            border-color: #2980b9;
+        }
+
+        .scale-info {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #e8f4fd;
+            border-radius: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        #grade-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        #grade-table th {
+            background-color: #3498db;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        #grade-table td {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #grade-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .course, .grade-input {
+            width: 150px;
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .course:focus, .grade-input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .converted-gpa {
+            font-weight: bold;
+            color: #27ae60;
+            font-size: 16px;
+        }
+
+        .add-row-btn, .calculate-btn, .clear-btn, .remove-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .add-row-btn:hover, .calculate-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .remove-btn {
+            background-color: #e74c3c;
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        .remove-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .clear-btn {
+            background-color: #95a5a6;
+        }
+
+        .clear-btn:hover {
+            background-color: #7f8c8d;
+        }
+
+        #result {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #e8f5e8;
+            border: 2px solid #27ae60;
+            border-radius: 10px;
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #27ae60;
+            display: none;
+        }
+
+        #error {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #fdf2f2;
+            border: 2px solid #e74c3c;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #e74c3c;
+            display: none;
+        }
+
+        .info-section {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            text-align: left;
+        }
+
+        .info-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .info-section p {
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+
+        .button-group {
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            #grade-table {
+                font-size: 12px;
+            }
+            
+            #grade-table th, #grade-table td {
+                padding: 8px;
+            }
+            
+            .course, .grade-input {
+                width: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section id="gpa-converter">
+            <h2>OUAC Grade Converter for Medical School</h2>
+            <p>Convert your university grades to the 4.0 scale used by Ontario medical schools. Select your university first, then enter your grades.</p>
+            
+            <div class="university-selection">
+                <h3>Select Your University:</h3>
+                <select id="university-select" class="university-dropdown">
+                    <option value="">-- Select Your University --</option>
+                    <option value="scale3">Algoma University (Scale 3)</option>
+                    <option value="scale3">Bishop's University (Scale 3)</option>
+                    <option value="scale3">Brock University (Scale 3)</option>
+                    <option value="scale3">Cape Breton University (Scale 3)</option>
+                    <option value="scale3">University of Guelph (Scale 3)</option>
+                    <option value="scale3">Lakehead University (Scale 3)</option>
+                    <option value="scale3">Nipissing University (Scale 3)</option>
+                    <option value="scale3">OCAD University (Scale 3)</option>
+                    <option value="scale3">University of Prince Edward Island (Scale 3)</option>
+                    <option value="scale3">University of Regina (Scale 3)</option>
+                    <option value="scale3">University of Saskatchewan (Scale 3)</option>
+                    <option value="scale3">St. Francis Xavier University (Scale 3)</option>
+                    <option value="scale3">Trent University (Scale 3)</option>
+                    <option value="scale3">Western University (Scale 3)</option>
+                    <option value="scale7">Acadia University (Scale 7)</option>
+                    <option value="scale7">University of Alberta (Scale 7)</option>
+                    <option value="scale7">Athabasca University (Scale 7)</option>
+                    <option value="scale7">Brandon University (Scale 7)</option>
+                    <option value="scale7">University of Calgary (Scale 7)</option>
+                    <option value="scale7">Carleton University (Scale 7)</option>
+                    <option value="scale7">Capilano University (Scale 7)</option>
+                    <option value="scale7">Concordia University (Scale 7)</option>
+                    <option value="scale7">Laurentian University (Scale 7)</option>
+                    <option value="scale7">Université Laval (Scale 7)</option>
+                    <option value="scale7">University of Lethbridge (Scale 7)</option>
+                    <option value="scale7">McMaster University (Scale 7)</option>
+                    <option value="scale7">Université de Moncton (Scale 7)</option>
+                    <option value="scale7">Université de Montréal (Scale 7)</option>
+                    <option value="scale7">Mount Allison University (Scale 7)</option>
+                    <option value="scale7">Mount Royal University (Scale 7)</option>
+                    <option value="scale7">Mount Saint Vincent University (Scale 7)</option>
+                    <option value="scale7">University of New Brunswick (Scale 7)</option>
+                    <option value="scale7">Ontario Tech University (Scale 7)</option>
+                    <option value="scale7">University of Ottawa (Scale 7)</option>
+                    <option value="scale7">Université du Québec (Scale 7)</option>
+                    <option value="scale7">Royal Roads University (Scale 7)</option>
+                    <option value="scale7">Université de Sherbrooke (Scale 7)</option>
+                    <option value="scale7">Simon Fraser University (Scale 7)</option>
+                    <option value="scale7">Saint Mary's University (Scale 7)</option>
+                    <option value="scale7">St. Thomas University (Scale 7)</option>
+                    <option value="scale7">Université Sainte-Anne (Scale 7)</option>
+                    <option value="scale7">Thompson Rivers University (Scale 7)</option>
+                    <option value="scale7">Toronto Metropolitan University (Scale 7)</option>
+                    <option value="scale7">Trinity Western University (Scale 7)</option>
+                    <option value="scale7">University of British Columbia (Scale 7)</option>
+                    <option value="scale7">University of Northern British Columbia (Scale 7)</option>
+                    <option value="scale7">Wilfrid Laurier University (Scale 7)</option>
+                    <option value="scale7">University of Winnipeg (Scale 7)</option>
+                    <option value="scale6">Memorial University (Scale 6)</option>
+                    <option value="scale8">McGill University (Scale 8)</option>
+                    <option value="scale8">Quest University (Scale 8)</option>
+                    <option value="scale9">University of Manitoba (Scale 9)</option>
+                    <option value="scale9">York University (Scale 9)</option>
+                    <option value="mixed">Dalhousie University (Scales 3, 7)</option>
+                    <option value="mixed">Queen's University (Scales 3, 7)</option>
+                    <option value="mixed">Royal Military College (Scales 4, 7)</option>
+                    <option value="mixed">University of Toronto (Scales 3, 7)</option>
+                    <option value="mixed">University of Victoria (Scales 3, 7)</option>
+                    <option value="mixed">University of Waterloo (Scales 3, 7)</option>
+                    <option value="mixed">University of Windsor (Scales 3, 7)</option>
+                </select>
+                
+                <div id="scale-info" class="scale-info" style="display: none;"></div>
+            </div>
+
+            <table id="grade-table" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Course Name</th>
+                        <th>Your Grade</th>
+                        <th>4.0 Scale GPA</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="grade-tbody">
+                </tbody>
+            </table>
+
+            <div class="button-group" id="button-group" style="display: none;">
+                <button id="add-row" class="add-row-btn">Add Course</button>
+                <button id="calculate-gpa" class="calculate-btn">Calculate Overall GPA</button>
+                <button id="clear-all" class="clear-btn">Clear All</button>
+            </div>
+
+            <div id="result"></div>
+            <div id="error"></div>
+
+            <div class="info-section">
+                <h3>About This Converter:</h3>
+                <p><strong>Purpose:</strong> This tool converts grades from your university's grading scale to the standardized 4.0 scale used by Ontario medical schools (OMSAS) and other professional programs.</p>
+                
+                <p><strong>Data Source:</strong> Conversion tables are based on the official OUAC (Ontario Universities' Application Centre) undergraduate grade conversion standards.</p>
+                
+                <p><strong>How to Use:</strong></p>
+                <ol style="margin: 10px 0 10px 40px;">
+                    <li>Select your university from the dropdown menu</li>
+                    <li>Add your courses and enter your grades</li>
+                    <li>The 4.0 scale equivalent will be calculated automatically</li>
+                    <li>Click "Calculate Overall GPA" to get your cumulative 4.0 GPA</li>
+                </ol>
+                
+                <p><strong>Important Notes:</strong></p>
+                <ul style="margin: 10px 0 10px 40px;">
+                    <li>Enter grades exactly as they appear on your transcript</li>
+                    <li>For percentage-based scales, enter the numerical value (e.g., "85" for 85%)</li>
+                    <li>For letter grades, enter the exact letter (e.g., "A", "B+", "C-")</li>
+                    <li>This converter is for reference only - always verify with official sources</li>
+                </ul>
+                
+                <p>For more information on medical school admissions, visit:
+                    <a href="https://www.ouac.on.ca/omsas/" target="_blank">OMSAS</a> and
+                    <a href="https://www.ouac.on.ca/guide/undergraduate-grade-conversion-table/" target="_blank">OUAC Grade Conversion Table</a>.
+                </p>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 Great Oak Foundation. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // OUAC conversion data
+        const conversionScales = {
+            scale3: {
+                name: "Scale 3 (Percentage)",
+                conversions: {
+                    "90-100": 4.00, "85-89": 3.90, "80-84": 3.70, "77-79": 3.30,
+                    "73-76": 3.00, "70-72": 2.70, "67-69": 2.30, "63-66": 2.00,
+                    "60-62": 1.70, "57-59": 1.30, "53-56": 1.00, "50-52": 0.70,
+                    "0-49": 0.00
+                },
+                type: "percentage"
+            },
+            scale6: {
+                name: "Scale 6 (Memorial University)",
+                conversions: {
+                    "94-100": 4.00, "87-93": 3.90, "80-86": 3.70, "75-79": 3.30,
+                    "70-74": 3.00, "65-69": 2.70, "60-64": 2.30, "55-59": 2.00,
+                    "50-54": 1.70, "0-49": 0.00
+                },
+                type: "percentage"
+            },
+            scale7: {
+                name: "Scale 7 (Letter Grades)",
+                conversions: {
+                    "A+": 4.00, "A": 3.90, "A-": 3.70, "B+": 3.30, "B": 3.00,
+                    "B-": 2.70, "C+": 2.30, "C": 2.00, "C-": 1.70, "D+": 1.30,
+                    "D": 1.00, "D-": 0.70, "F": 0.00, "E": 0.00
+                },
+                type: "letter"
+            },
+            scale8: {
+                name: "Scale 8 (McGill/Quest)",
+                conversions: {
+                    "A": 4.00, "A-": 3.70, "B+": 3.30, "B": 3.00, "B-": 2.70,
+                    "C+": 2.30, "C": 2.00, "C-": 1.70, "D+": 1.30, "D": 1.00,
+                    "F": 0.00
+                },
+                type: "letter"
+            },
+            scale9: {
+                name: "Scale 9 (Manitoba/York)",
+                conversions: {
+                    "A+": 4.00, "A": 3.90, "B+": 3.30, "B": 3.00, "C+": 2.30,
+                    "C": 2.00, "D+": 1.30, "D": 1.00, "F": 0.00
+                },
+                type: "letter"
+            }
+        };
+
+        let currentScale = null;
+
+        // University selection handler
+        document.getElementById('university-select').addEventListener('change', function() {
+            const selectedValue = this.value;
+            const scaleInfo = document.getElementById('scale-info');
+            const gradeTable = document.getElementById('grade-table');
+            const buttonGroup = document.getElementById('button-group');
+            
+            if (selectedValue && selectedValue !== 'mixed') {
+                currentScale = conversionScales[selectedValue];
+                scaleInfo.innerHTML = '<strong>Selected Scale:</strong> ' + currentScale.name;
+                scaleInfo.style.display = 'block';
+                gradeTable.style.display = 'table';
+                buttonGroup.style.display = 'block';
+                
+                // Add initial row
+                if (document.getElementById('grade-tbody').children.length === 0) {
+                    addCourseRow();
+                }
+            } else if (selectedValue === 'mixed') {
+                scaleInfo.innerHTML = '<strong>Notice:</strong> This university uses multiple scales. Please contact your registrar to determine which scale applies to your program.';
+                scaleInfo.style.display = 'block';
+                gradeTable.style.display = 'none';
+                buttonGroup.style.display = 'none';
+            } else {
+                scaleInfo.style.display = 'none';
+                gradeTable.style.display = 'none';
+                buttonGroup.style.display = 'none';
+            }
+            
+            clearResults();
+        });
+
+        function addCourseRow() {
+            const tbody = document.getElementById('grade-tbody');
+            const row = document.createElement('tr');
+            
+            const placeholder = currentScale.type === 'percentage' ? 'Enter percentage (0-100)' : 'Enter letter grade (A+, A, B+, etc.)';
+            
+            row.innerHTML = 
+                '<td><input type="text" class="course" placeholder="Course Name"></td>' +
+                '<td><input type="text" class="grade-input" placeholder="' + placeholder + '"></td>' +
+                '<td class="converted-gpa">-</td>' +
+                '<td><button class="remove-btn" onclick="removeRow(this)">Remove</button></td>';
+            
+            // Add grade conversion listener
+            const gradeInput = row.querySelector('.grade-input');
+            gradeInput.addEventListener('input', function() {
+                convertGrade(this);
+            });
+            
+            tbody.appendChild(row);
+        }
+
+        function removeRow(button) {
+            button.closest('tr').remove();
+        }
+
+        function convertGrade(input) {
+            const grade = input.value.trim().toUpperCase();
+            const convertedCell = input.closest('tr').querySelector('.converted-gpa');
+            
+            if (!grade) {
+                convertedCell.textContent = '-';
+                return;
+            }
+            
+            let gpaValue = null;
+            
+            if (currentScale.type === 'percentage') {
+                const numericGrade = parseFloat(grade);
+                if (isNaN(numericGrade) || numericGrade < 0 || numericGrade > 100) {
+                    convertedCell.textContent = 'Invalid';
+                    return;
+                }
+                
+                // Find the appropriate range
+                for (const range in currentScale.conversions) {
+                    const [min, max] = range.split('-').map(Number);
+                    if (numericGrade >= min && numericGrade <= max) {
+                        gpaValue = currentScale.conversions[range];
+                        break;
+                    }
+                }
+            } else {
+                // Letter grade
+                gpaValue = currentScale.conversions[grade];
+            }
+            
+            if (gpaValue !== null && gpaValue !== undefined) {
+                convertedCell.textContent = gpaValue.toFixed(2);
+            } else {
+                convertedCell.textContent = 'Invalid';
+            }
+        }
+
+        function calculateOverallGPA() {
+            const convertedGPAs = Array.from(document.querySelectorAll('.converted-gpa'))
+                .map(cell => parseFloat(cell.textContent))
+                .filter(gpa => !isNaN(gpa));
+            
+            if (convertedGPAs.length === 0) {
+                showError('Please enter at least one valid grade');
+                return;
+            }
+            
+            const totalGPA = convertedGPAs.reduce((sum, gpa) => sum + gpa, 0);
+            const averageGPA = totalGPA / convertedGPAs.length;
+            
+            showResult(averageGPA, convertedGPAs.length);
+        }
+
+        function showResult(gpa, courseCount) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<strong>Overall GPA on 4.0 Scale:</strong> ' + gpa.toFixed(3) + '<br>Based on ' + courseCount + ' course(s)';
+            resultDiv.style.display = 'block';
+            document.getElementById('error').style.display = 'none';
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            document.getElementById('result').style.display = 'none';
+        }
+
+        function clearResults() {
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('error').style.display = 'none';
+        }
+
+        function clearAll() {
+            document.getElementById('grade-tbody').innerHTML = '';
+            clearResults();
+            addCourseRow();
+        }
+
+        // Event listeners
+        document.getElementById('add-row').addEventListener('click', addCourseRow);
+        document.getElementById('calculate-gpa').addEventListener('click', calculateOverallGPA);
+        document.getElementById('clear-all').addEventListener('click', clearAll);
+    </script>
+</body>
+</html>
