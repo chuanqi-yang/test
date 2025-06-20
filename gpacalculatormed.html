@@ -48,7 +48,7 @@
         }
 
         main {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
             background-color: white;
@@ -136,15 +136,24 @@
             background-color: #f8f9fa;
         }
 
-        .course, .grade-input {
-            width: 150px;
+        .course, .grade-input, .credit-input, .term-select {
+            width: 120px;
             padding: 8px;
             border: 2px solid #ddd;
             border-radius: 5px;
             font-size: 14px;
         }
 
-        .course:focus, .grade-input:focus {
+        .credit-input {
+            width: 80px;
+        }
+
+        .term-select {
+            width: 100px;
+            background-color: white;
+        }
+
+        .course:focus, .grade-input:focus, .credit-input:focus, .term-select:focus {
             outline: none;
             border-color: #3498db;
         }
@@ -244,17 +253,34 @@
             margin: 20px 0;
         }
 
+        .credit-note {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+            color: #856404;
+        }
+
         @media (max-width: 768px) {
             #grade-table {
                 font-size: 12px;
             }
             
             #grade-table th, #grade-table td {
-                padding: 8px;
+                padding: 8px 4px;
             }
             
             .course, .grade-input {
-                width: 100px;
+                width: 80px;
+            }
+            
+            .credit-input {
+                width: 60px;
+            }
+
+            .term-select {
+                width: 70px;
             }
         }
     </style>
@@ -273,7 +299,7 @@
     <main>
         <section id="gpa-converter">
             <h2>OUAC Grade Converter for Medical School</h2>
-            <p>Convert your university grades to the 4.0 scale used by Ontario medical schools. Select your university first, then enter your grades.</p>
+            <p>Convert your university grades to the 4.0 scale used by Ontario medical schools. Select your university first, then enter your grades and credit hours.</p>
             
             <div class="university-selection">
                 <h3>Select Your University:</h3>
@@ -344,11 +370,21 @@
                 <div id="scale-info" class="scale-info" style="display: none;"></div>
             </div>
 
+            <div class="credit-note" id="credit-note" style="display: none;">
+                <strong>📋 Credit Hours Information:</strong><br>
+                • Enter the credit hours/units for each course (typically 0.5, 1.0, 3.0, etc.)<br>
+                • Select the year and term when you took each course for better organization<br>
+                • Your weighted GPA will be calculated based on these credit values<br>
+                • If you leave credits blank, each course will be weighted equally (unweighted GPA)
+            </div>
+
             <table id="grade-table" style="display: none;">
                 <thead>
                     <tr>
                         <th>Course Name</th>
                         <th>Your Grade</th>
+                        <th>Credits</th>
+                        <th>Year/Term</th>
                         <th>4.0 Scale GPA</th>
                         <th>Action</th>
                     </tr>
@@ -376,6 +412,8 @@
                 <ol style="margin: 10px 0 10px 40px;">
                     <li>Select your university from the dropdown menu</li>
                     <li>Add your courses and enter your grades</li>
+                    <li>Enter credit hours for each course (optional but recommended for accuracy)</li>
+                    <li>Select the year and term when you took each course</li>
                     <li>The 4.0 scale equivalent will be calculated automatically</li>
                     <li>Click "Calculate Overall GPA" to get your cumulative 4.0 GPA</li>
                 </ol>
@@ -385,6 +423,8 @@
                     <li>Enter grades exactly as they appear on your transcript</li>
                     <li>For percentage-based scales, enter the numerical value (e.g., "85" for 85%)</li>
                     <li>For letter grades, enter the exact letter (e.g., "A", "B+", "C-")</li>
+                    <li>Credit hours should match your transcript (e.g., 3.0, 0.5, 1.0)</li>
+                    <li>Weighted GPA gives a more accurate representation of your academic performance</li>
                     <li>This converter is for reference only - always verify with official sources</li>
                 </ul>
                 
@@ -457,6 +497,7 @@
             const scaleInfo = document.getElementById('scale-info');
             const gradeTable = document.getElementById('grade-table');
             const buttonGroup = document.getElementById('button-group');
+            const creditNote = document.getElementById('credit-note');
             
             if (selectedValue && selectedValue !== 'mixed') {
                 currentScale = conversionScales[selectedValue];
@@ -464,6 +505,7 @@
                 scaleInfo.style.display = 'block';
                 gradeTable.style.display = 'table';
                 buttonGroup.style.display = 'block';
+                creditNote.style.display = 'block';
                 
                 // Add initial row
                 if (document.getElementById('grade-tbody').children.length === 0) {
@@ -474,10 +516,12 @@
                 scaleInfo.style.display = 'block';
                 gradeTable.style.display = 'none';
                 buttonGroup.style.display = 'none';
+                creditNote.style.display = 'none';
             } else {
                 scaleInfo.style.display = 'none';
                 gradeTable.style.display = 'none';
                 buttonGroup.style.display = 'none';
+                creditNote.style.display = 'none';
             }
             
             clearResults();
@@ -489,9 +533,18 @@
             
             const placeholder = currentScale.type === 'percentage' ? 'Enter percentage (0-100)' : 'Enter letter grade (A+, A, B+, etc.)';
             
+            // Generate year/term options
+            let termOptions = '<option value="">Select Term</option>';
+            for (let year = 2010; year <= 2040; year++) {
+                termOptions += `<option value="${year}W">${year} Winter</option>`;
+                termOptions += `<option value="${year}S">${year} Summer</option>`;
+            }
+            
             row.innerHTML = 
                 '<td><input type="text" class="course" placeholder="Course Name"></td>' +
                 '<td><input type="text" class="grade-input" placeholder="' + placeholder + '"></td>' +
+                '<td><input type="number" class="credit-input" placeholder="3.0" step="0.1" min="0"></td>' +
+                '<td><select class="term-select">' + termOptions + '</select></td>' +
                 '<td class="converted-gpa">-</td>' +
                 '<td><button class="remove-btn" onclick="removeRow(this)">Remove</button></td>';
             
@@ -547,24 +600,55 @@
         }
 
         function calculateOverallGPA() {
-            const convertedGPAs = Array.from(document.querySelectorAll('.converted-gpa'))
-                .map(cell => parseFloat(cell.textContent))
-                .filter(gpa => !isNaN(gpa));
+            const rows = document.querySelectorAll('#grade-tbody tr');
+            let totalWeightedPoints = 0;
+            let totalCredits = 0;
+            let validCourses = 0;
+            let hasCredits = false;
             
-            if (convertedGPAs.length === 0) {
+            for (const row of rows) {
+                const gradeCell = row.querySelector('.converted-gpa');
+                const creditInput = row.querySelector('.credit-input');
+                
+                const gpa = parseFloat(gradeCell.textContent);
+                const credits = parseFloat(creditInput.value) || 0;
+                
+                if (!isNaN(gpa) && gpa >= 0) {
+                    if (credits > 0) {
+                        // Weighted calculation
+                        totalWeightedPoints += gpa * credits;
+                        totalCredits += credits;
+                        hasCredits = true;
+                    } else {
+                        // Unweighted calculation (treat as 1 credit)
+                        totalWeightedPoints += gpa;
+                        totalCredits += 1;
+                    }
+                    validCourses++;
+                }
+            }
+            
+            if (validCourses === 0) {
                 showError('Please enter at least one valid grade');
                 return;
             }
             
-            const totalGPA = convertedGPAs.reduce((sum, gpa) => sum + gpa, 0);
-            const averageGPA = totalGPA / convertedGPAs.length;
-            
-            showResult(averageGPA, convertedGPAs.length);
+            const overallGPA = totalWeightedPoints / totalCredits;
+            showResult(overallGPA, validCourses, totalCredits, hasCredits);
         }
 
-        function showResult(gpa, courseCount) {
+        function showResult(gpa, courseCount, totalCredits, hasCredits) {
             const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = '<strong>Overall GPA on 4.0 Scale:</strong> ' + gpa.toFixed(3) + '<br>Based on ' + courseCount + ' course(s)';
+            let resultHTML = '<strong>Overall GPA on 4.0 Scale:</strong> ' + gpa.toFixed(3) + '<br>';
+            
+            if (hasCredits) {
+                resultHTML += 'Weighted GPA based on ' + courseCount + ' course(s) totaling ' + totalCredits.toFixed(1) + ' credits';
+            } else {
+                resultHTML += 'Unweighted GPA based on ' + courseCount + ' course(s)<br>';
+                resultHTML += '<small style="color: #856404;">💡 Tip: Add credit hours for a more accurate weighted GPA calculation</small>';
+            }
+            
+            resultDiv.innerHTML = resultHTML;
             resultDiv.style.display = 'block';
             document.getElementById('error').style.display = 'none';
         }
