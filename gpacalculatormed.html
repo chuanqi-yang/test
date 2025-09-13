@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="OUAC Grade Converter for Medical School Applications">
-    <title>Great Oak Foundation - OUAC Grade Converter</title>
+    <meta name="description" content="Grade Converter for Medical School Applications">
+    <title>Great Oak Foundation - Grade Converter</title>
     <style>
         * {
             margin: 0;
@@ -205,10 +205,23 @@
             background-color: #e8f5e8;
             border: 2px solid #27ae60;
             border-radius: 10px;
-            font-size: 1.3em;
+            font-size: 1.2em;
             font-weight: bold;
             color: #27ae60;
             display: none;
+            text-align: left;
+        }
+
+        .gpa-result {
+            margin: 10px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            border-radius: 5px;
+        }
+
+        .gpa-result.weighted {
+            border-left-color: #e74c3c;
         }
 
         #error {
@@ -299,7 +312,7 @@
     <main>
         <section id="gpa-converter">
             <h2>OUAC Grade Converter for Medical School</h2>
-            <p>Convert your university grades to the 4.0 scale used by Ontario medical schools. Select your university first, then enter your grades and credit hours.</p>
+            <p>Convert your university grades to the 4.0 scale used by Ontario medical schools. Calculate both cumulative GPA (cGPA) and weighted/adjusted GPA as used by different medical schools.</p>
             
             <div class="university-selection">
                 <h3>Select Your University:</h3>
@@ -371,11 +384,12 @@
             </div>
 
             <div class="credit-note" id="credit-note" style="display: none;">
-                <strong>📋 Credit Hours Information:</strong><br>
+                <strong>Credit Hours & Academic Year Information:</strong><br>
                 • Enter the credit hours/units for each course (typically 0.5, 1.0, 3.0, etc.)<br>
-                • Select the year and term when you took each course for better organization<br>
-                • Your weighted GPA will be calculated based on these credit values<br>
-                • If you leave credits blank, each course will be weighted equally (unweighted GPA)
+                • Select the year and term when you took each course - this is crucial for weighted GPA calculations<br>
+                • Full academic years typically require 18+ credits (varies by university)<br>
+                • The calculator will identify your worst performing year and calculate adjusted GPA<br>
+                • Both cumulative GPA (cGPA) and weighted/adjusted GPA will be calculated where applicable
             </div>
 
             <table id="grade-table" style="display: none;">
@@ -384,7 +398,7 @@
                         <th>Course Name</th>
                         <th>Your Grade</th>
                         <th>Credits</th>
-                        <th>Year/Term</th>
+                        <th>Academic Year</th>
                         <th>4.0 Scale GPA</th>
                         <th>Action</th>
                     </tr>
@@ -395,7 +409,7 @@
 
             <div class="button-group" id="button-group" style="display: none;">
                 <button id="add-row" class="add-row-btn">Add Course</button>
-                <button id="calculate-gpa" class="calculate-btn">Calculate Overall GPA</button>
+                <button id="calculate-gpa" class="calculate-btn">Calculate cGPA & Weighted GPA</button>
                 <button id="clear-all" class="clear-btn">Clear All</button>
             </div>
 
@@ -403,29 +417,45 @@
             <div id="error"></div>
 
             <div class="info-section">
-                <h3>About This Converter:</h3>
-                <p><strong>Purpose:</strong> This tool converts grades from your university's grading scale to the standardized 4.0 scale used by Ontario medical schools (OMSAS) and other professional programs.</p>
+                <h3>About This Enhanced Converter:</h3>
+                <p><strong>Purpose:</strong> This tool converts grades from your university's grading scale to the standardized 4.0 scale and calculates both cumulative GPA (cGPA) and weighted/adjusted GPA as used by different medical schools.</p>
                 
-                <p><strong>Data Source:</strong> Conversion tables are based on the official OUAC (Ontario Universities' Application Centre) undergraduate grade conversion standards.</p>
+                <p><strong>GPA Types Calculated:</strong></p>
+                <ul style="margin: 10px 0 10px 40px;">
+                    <li><strong>Cumulative GPA (cGPA):</strong> All courses included, weighted by credits</li>
+                    <li><strong>Adjusted/Weighted GPA:</strong> Calculated by dropping worst academic year (when applicable)</li>
+                    <li><strong>Two Best Years GPA:</strong> Uses only your two highest-performing academic years</li>
+                    <li><strong>Three Most Recent Years GPA:</strong> Uses your three most recent academic years</li>
+                </ul>
+                
+                <p><strong>Medical School GPA Requirements:</strong></p>
+                <ul style="margin: 10px 0 10px 40px;">
+                    <li><strong>Drop Worst Year:</strong> University of Calgary, University of Alberta</li>
+                    <li><strong>Drop 30 Worst Credits:</strong> University of British Columbia</li>
+                    <li><strong>Credit-Based Dropping:</strong> University of Manitoba (15-30 credits based on total)</li>
+                    <li><strong>Two Best Years:</strong> Western University</li>
+                    <li><strong>Two Most Recent Years:</strong> Dalhousie University</li>
+                    <li><strong>Three Most Recent Years:</strong> University of Ottawa</li>
+                    <li><strong>Standard cGPA:</strong> University of Toronto, McMaster, Queen's, McGill</li>
+                </ul>
                 
                 <p><strong>How to Use:</strong></p>
                 <ol style="margin: 10px 0 10px 40px;">
                     <li>Select your university from the dropdown menu</li>
-                    <li>Add your courses and enter your grades</li>
-                    <li>Enter credit hours for each course (optional but recommended for accuracy)</li>
-                    <li>Select the year and term when you took each course</li>
+                    <li>Add your courses and enter grades exactly as they appear on your transcript</li>
+                    <li>Enter credit hours for each course (essential for accurate calculations)</li>
+                    <li><strong>Select the academic year for each course</strong> - this determines year-based calculations</li>
                     <li>The 4.0 scale equivalent will be calculated automatically</li>
-                    <li>Click "Calculate Overall GPA" to get your cumulative 4.0 GPA</li>
+                    <li>Click "Calculate cGPA & Weighted GPA" to see all applicable GPA calculations</li>
                 </ol>
                 
                 <p><strong>Important Notes:</strong></p>
                 <ul style="margin: 10px 0 10px 40px;">
-                    <li>Enter grades exactly as they appear on your transcript</li>
+                    <li>Academic years with fewer than 18 credits may not qualify for "worst year" dropping</li>
                     <li>For percentage-based scales, enter the numerical value (e.g., "85" for 85%)</li>
                     <li>For letter grades, enter the exact letter (e.g., "A", "B+", "C-")</li>
-                    <li>Credit hours should match your transcript (e.g., 3.0, 0.5, 1.0)</li>
-                    <li>Weighted GPA gives a more accurate representation of your academic performance</li>
                     <li>This converter is for reference only - always verify with official sources</li>
+                    <li>Different medical schools use different calculation methods - check their specific requirements</li>
                 </ul>
                 
                 <p>For more information on medical school admissions, visit:
@@ -533,18 +563,17 @@
             
             const placeholder = currentScale.type === 'percentage' ? 'Enter percentage (0-100)' : 'Enter letter grade (A+, A, B+, etc.)';
             
-            // Generate year/term options
-            let termOptions = '<option value="">Select Term</option>';
-            for (let year = 2010; year <= 2040; year++) {
-                termOptions += `<option value="${year}W">${year} Winter</option>`;
-                termOptions += `<option value="${year}S">${year} Summer</option>`;
+            // Generate academic year options
+            let yearOptions = '<option value="">Select Academic Year</option>';
+            for (let year = 2010; year <= 2030; year++) {
+                yearOptions += `<option value="${year}-${year+1}">Academic Year ${year}-${year+1}</option>`;
             }
             
             row.innerHTML = 
                 '<td><input type="text" class="course" placeholder="Course Name"></td>' +
                 '<td><input type="text" class="grade-input" placeholder="' + placeholder + '"></td>' +
                 '<td><input type="number" class="credit-input" placeholder="3.0" step="0.1" min="0"></td>' +
-                '<td><select class="term-select">' + termOptions + '</select></td>' +
+                '<td><select class="term-select">' + yearOptions + '</select></td>' +
                 '<td class="converted-gpa">-</td>' +
                 '<td><button class="remove-btn" onclick="removeRow(this)">Remove</button></td>';
             
@@ -599,54 +628,201 @@
             }
         }
 
-        function calculateOverallGPA() {
+        function calculatecGPA() {
             const rows = document.querySelectorAll('#grade-tbody tr');
-            let totalWeightedPoints = 0;
-            let totalCredits = 0;
-            let validCourses = 0;
-            let hasCredits = false;
+            const yearData = {};
+            let allCourses = [];
             
+            // Group courses by academic year
             for (const row of rows) {
                 const gradeCell = row.querySelector('.converted-gpa');
                 const creditInput = row.querySelector('.credit-input');
+                const yearSelect = row.querySelector('.term-select');
+                const courseInput = row.querySelector('.course');
                 
                 const gpa = parseFloat(gradeCell.textContent);
-                const credits = parseFloat(creditInput.value) || 0;
+                const credits = parseFloat(creditInput.value) || 1; // Default to 1 if not specified
+                const year = yearSelect.value;
+                const courseName = courseInput.value || 'Course';
                 
                 if (!isNaN(gpa) && gpa >= 0) {
-                    if (credits > 0) {
-                        // Weighted calculation
-                        totalWeightedPoints += gpa * credits;
-                        totalCredits += credits;
-                        hasCredits = true;
-                    } else {
-                        // Unweighted calculation (treat as 1 credit)
-                        totalWeightedPoints += gpa;
-                        totalCredits += 1;
+                    const courseData = { gpa, credits, year, courseName };
+                    allCourses.push(courseData);
+                    
+                    if (year) {
+                        if (!yearData[year]) {
+                            yearData[year] = { courses: [], totalCredits: 0, weightedSum: 0 };
+                        }
+                        yearData[year].courses.push(courseData);
+                        yearData[year].totalCredits += credits;
+                        yearData[year].weightedSum += gpa * credits;
                     }
-                    validCourses++;
                 }
             }
             
-            if (validCourses === 0) {
+            if (allCourses.length === 0) {
                 showError('Please enter at least one valid grade');
                 return;
             }
             
-            const overallGPA = totalWeightedPoints / totalCredits;
-            showResult(overallGPA, validCourses, totalCredits, hasCredits);
+            // Calculate different GPA types
+            const results = calculateGPAVariations(allCourses, yearData);
+            showResults(results);
         }
 
-        function showResult(gpa, courseCount, totalCredits, hasCredits) {
-            const resultDiv = document.getElementById('result');
-            let resultHTML = '<strong>Overall GPA on 4.0 Scale:</strong> ' + gpa.toFixed(3) + '<br>';
+        function calculateGPAVariations(allCourses, yearData) {
+            const results = {};
             
-            if (hasCredits) {
-                resultHTML += 'Weighted GPA based on ' + courseCount + ' course(s) totaling ' + totalCredits.toFixed(1) + ' credits';
-            } else {
-                resultHTML += 'Unweighted GPA based on ' + courseCount + ' course(s)<br>';
-                resultHTML += '<small style="color: #856404;">💡 Tip: Add credit hours for a more accurate weighted GPA calculation</small>';
+            // 1. Cumulative GPA (cGPA) - All courses
+            let totalCredits = 0, totalWeightedSum = 0;
+            allCourses.forEach(course => {
+                totalCredits += course.credits;
+                totalWeightedSum += course.gpa * course.credits;
+            });
+            results.cGPA = totalCredits > 0 ? totalWeightedSum / totalCredits : 0;
+            results.totalCourses = allCourses.length;
+            results.totalCredits = totalCredits;
+            
+            // 2. Calculate year averages
+            const yearAverages = [];
+            for (const [year, data] of Object.entries(yearData)) {
+                if (data.totalCredits > 0) {
+                    yearAverages.push({
+                        year: year,
+                        gpa: data.weightedSum / data.totalCredits,
+                        credits: data.totalCredits,
+                        courses: data.courses.length
+                    });
+                }
             }
+            
+            yearAverages.sort((a, b) => a.gpa - b.gpa); // Sort by GPA, lowest first
+            results.yearBreakdown = yearAverages;
+            
+            // 3. Adjusted GPA (Drop worst year) - requires at least 2 full years
+            if (yearAverages.length >= 2) {
+                // Find years with sufficient credits (18+) for dropping
+                const fullYears = yearAverages.filter(year => year.credits >= 18);
+                
+                if (fullYears.length >= 2) {
+                    // Drop the worst full year
+                    const remainingYears = fullYears.slice(1); // Remove worst (first after sorting)
+                    let adjustedCredits = 0, adjustedWeightedSum = 0;
+                    
+                    remainingYears.forEach(year => {
+                        adjustedCredits += year.credits;
+                        adjustedWeightedSum += year.gpa * year.credits;
+                    });
+                    
+                    results.adjustedGPA = adjustedCredits > 0 ? adjustedWeightedSum / adjustedCredits : 0;
+                    results.droppedYear = fullYears[0].year;
+                } else if (yearAverages.length >= 2) {
+                    // If no full years, still calculate but note limitation
+                    const remainingYears = yearAverages.slice(1);
+                    let adjustedCredits = 0, adjustedWeightedSum = 0;
+                    
+                    remainingYears.forEach(year => {
+                        adjustedCredits += year.credits;
+                        adjustedWeightedSum += year.gpa * year.credits;
+                    });
+                    
+                    results.adjustedGPA = adjustedCredits > 0 ? adjustedWeightedSum / adjustedCredits : 0;
+                    results.droppedYear = yearAverages[0].year;
+                    results.adjustedNote = "Note: Dropped year had fewer than 18 credits";
+                }
+            }
+            
+            // 4. Two Best Years GPA (Western style)
+            if (yearAverages.length >= 2) {
+                const bestTwoYears = [...yearAverages].sort((a, b) => b.gpa - a.gpa).slice(0, 2);
+                let bestTwoCredits = 0, bestTwoWeightedSum = 0;
+                
+                bestTwoYears.forEach(year => {
+                    bestTwoCredits += year.credits;
+                    bestTwoWeightedSum += year.gpa * year.credits;
+                });
+                
+                results.twoBestYearsGPA = bestTwoCredits > 0 ? bestTwoWeightedSum / bestTwoCredits : 0;
+                results.bestTwoYears = bestTwoYears.map(y => y.year);
+            }
+            
+            // 5. Three Most Recent Years (Ottawa style)
+            if (yearAverages.length >= 3) {
+                const sortedByYear = [...yearAverages].sort((a, b) => b.year.localeCompare(a.year));
+                const recentThreeYears = sortedByYear.slice(0, 3);
+                let recentThreeCredits = 0, recentThreeWeightedSum = 0;
+                
+                recentThreeYears.forEach(year => {
+                    recentThreeCredits += year.credits;
+                    recentThreeWeightedSum += year.gpa * year.credits;
+                });
+                
+                results.threeRecentYearsGPA = recentThreeCredits > 0 ? recentThreeWeightedSum / recentThreeCredits : 0;
+                results.recentThreeYears = recentThreeYears.map(y => y.year);
+            }
+            
+            return results;
+        }
+
+        function showResults(results) {
+            const resultDiv = document.getElementById('result');
+            let resultHTML = '<h3>GPA Calculations (4.0 Scale):</h3>';
+            
+            // Cumulative GPA
+            resultHTML += '<div class="gpa-result">';
+            resultHTML += '<strong>Cumulative GPA (cGPA):</strong> ' + results.cGPA.toFixed(3) + '<br>';
+            resultHTML += '<small>Based on ' + results.totalCourses + ' courses totaling ' + results.totalCredits.toFixed(1) + ' credits</small>';
+            resultHTML += '</div>';
+            
+            // Year-by-year breakdown
+            if (results.yearBreakdown.length > 0) {
+                resultHTML += '<div class="gpa-result">';
+                resultHTML += '<strong>Year-by-Year Breakdown:</strong><br>';
+                results.yearBreakdown.sort((a, b) => b.year.localeCompare(a.year)).forEach(year => {
+                    resultHTML += year.year + ': ' + year.gpa.toFixed(3) + ' GPA (' + year.credits.toFixed(1) + ' credits)<br>';
+                });
+                resultHTML += '</div>';
+            }
+            
+            // Adjusted GPA (Drop worst year)
+            if (results.adjustedGPA !== undefined) {
+                resultHTML += '<div class="gpa-result weighted">';
+                resultHTML += '<strong>Adjusted GPA (Worst Year Dropped):</strong> ' + results.adjustedGPA.toFixed(3) + '<br>';
+                resultHTML += '<small>Dropped: ' + results.droppedYear;
+                if (results.adjustedNote) {
+                    resultHTML += ' (' + results.adjustedNote + ')';
+                }
+                resultHTML += '</small><br>';
+                resultHTML += '<small>Used by: University of Calgary, University of Alberta</small>';
+                resultHTML += '</div>';
+            }
+            
+            // Two Best Years GPA
+            if (results.twoBestYearsGPA !== undefined) {
+                resultHTML += '<div class="gpa-result weighted">';
+                resultHTML += '<strong>Two Best Years GPA:</strong> ' + results.twoBestYearsGPA.toFixed(3) + '<br>';
+                resultHTML += '<small>Years used: ' + results.bestTwoYears.join(', ') + '</small><br>';
+                resultHTML += '<small>Used by: Western University</small>';
+                resultHTML += '</div>';
+            }
+            
+            // Three Most Recent Years GPA
+            if (results.threeRecentYearsGPA !== undefined) {
+                resultHTML += '<div class="gpa-result weighted">';
+                resultHTML += '<strong>Three Most Recent Years GPA:</strong> ' + results.threeRecentYearsGPA.toFixed(3) + '<br>';
+                resultHTML += '<small>Years used: ' + results.recentThreeYears.join(', ') + '</small><br>';
+                resultHTML += '<small>Used by: University of Ottawa</small>';
+                resultHTML += '</div>';
+            }
+            
+            // Notes
+            resultHTML += '<div class="gpa-result" style="background-color: #e8f4fd; border-left-color: #3498db;">';
+            resultHTML += '<strong>Important Notes:</strong><br>';
+            resultHTML += '• Different medical schools use different calculation methods<br>';
+            resultHTML += '• Some schools require minimum 18 credits per year for "worst year" dropping<br>';
+            resultHTML += '• Always verify GPA calculations with official school requirements<br>';
+            resultHTML += '• Graduate coursework may be treated differently by some schools';
+            resultHTML += '</div>';
             
             resultDiv.innerHTML = resultHTML;
             resultDiv.style.display = 'block';
@@ -673,7 +849,7 @@
 
         // Event listeners
         document.getElementById('add-row').addEventListener('click', addCourseRow);
-        document.getElementById('calculate-gpa').addEventListener('click', calculateOverallGPA);
+        document.getElementById('calculate-gpa').addEventListener('click', calculatecGPA);
         document.getElementById('clear-all').addEventListener('click', clearAll);
     </script>
 </body>
