@@ -311,7 +311,7 @@
     </header>
     <main>
         <section id="gpa-converter">
-            <h2>OUAC Grade Converter for Medical School</h2>
+            <h2> Grade Converter for Medical School</h2>
             <p>Convert your university grades to the 4.0 scale used by Ontario medical schools. Calculate both cumulative GPA (cGPA) and weighted/adjusted GPA as used by different medical schools.</p>
             
             <div class="university-selection">
@@ -386,9 +386,8 @@
             <div class="credit-note" id="credit-note" style="display: none;">
                 <strong>Credit Hours & Academic Year Information:</strong><br>
                 • Enter the credit hours/units for each course (typically 0.5, 1.0, 3.0, etc.)<br>
-                • Select the year and term when you took each course - this is crucial for weighted GPA calculations<br>
-                • Full academic years typically require 18+ credits (varies by university)<br>
-                • The calculator will identify your worst performing year and calculate adjusted GPA<br>
+                • Select the year and term when you took each course - this is crucial for weighted GPA calculations and calculations WILL NOT appear if you do not tick this option<br>
+                • The calculator will identify your worst performing year and calculate adjusted GPA accordingly<br>
                 • Both cumulative GPA (cGPA) and weighted/adjusted GPA will be calculated where applicable
             </div>
 
@@ -561,7 +560,7 @@
             const tbody = document.getElementById('grade-tbody');
             const row = document.createElement('tr');
             
-            const placeholder = currentScale.type === 'percentage' ? 'Enter percentage (0-100)' : 'Enter letter grade (A+, A, B+, etc.)';
+            const placeholder = currentScale.type === 'percentage' ? 'Enter' : 'Enter';
             
             // Generate academic year options
             let yearOptions = '<option value="">Select Academic Year</option>';
