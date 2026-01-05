@@ -60,4 +60,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (percentage >= 50) return 0.7;
         return 0.0;
     }
+<script src="script.js"></script>
+<script src="security-log.js"></script>
 });
